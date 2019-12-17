@@ -53,8 +53,8 @@ export default {
       secureMode: true,
       shareMode: false,
       autoStart: false,
-      address: '',
-      port: '',
+      address: /([^/\.]+)/.exec(window.location.hostname)[1],
+      port: '3030',
       width: 400,
       height: 300,
       loading: false,
@@ -93,13 +93,13 @@ export default {
   },
   methods: {
     isValidAddress (address) {
-      if (address.length !== 42) {
-        return false
+      if (/^[a-zA-Z0-9][a-zA-Z0-9-]{5,30}[a-zA-Z]$/.test(address)) {
+        return true
       }
-      if (!/^(0x|0X)[0-9a-fA-F]{40}$/.test(address)) {
-        return false
+      if (/^(0x|0X)[0-9a-fA-F]{40}$/.test(address)) {
+        return true
       }
-      return true
+      return false
     },
     isValidPort (port) {
       if (!/^[0-9]{1,5}$/.test(port)) {
@@ -130,11 +130,8 @@ export default {
     },
     validateInput () {
       this.errors = []
-      if (this.address.length !== 42) {
-        this.errors.push('Wrong diode address')
-      }
-      if (!/^(0x|0X)[0-9a-fA-F]{40}$/.test(this.address)) {
-        this.errors.push('Wrong diode address')
+      if (!this.isValidAddress(this.address)) {
+        this.errors.push('Invalid diode address: "' + this.address + '"')
       }
       if (!/^[0-9]{1,5}$/.test(this.port)) {
         this.errors.push('Wrong port')
