@@ -26,14 +26,14 @@
       </div>
       <div style="padding:15px">
         <label for="ethereum-address">
-          Ethereum Address:
-          <input id="ethereum-address" type="text" v-model="address" v-bind:disabled="loading || connected">
+          Ethereum Address / <a href="https://diode.io/testnet/#/dns" target="_blank">DNS</a>
+          <input id="ethereum-address" type="text" placeholder="ethereum address / DNS" v-model="address" v-bind:disabled="loading || connected">
         </label>
       </div>
       <div style="padding:15px">
         <label for="port">
           Port:
-          <input id="port" type="text" v-model="port" v-bind:disabled="loading || connected">
+          <input id="port" type="text" v-model="port" placeholder="port" v-bind:disabled="loading || connected">
         </label>
       </div>
       <div style="padding:15px">
@@ -69,19 +69,19 @@ export default {
     if (typeof shareMode !== 'undefined') {
       this.shareMode = true
     }
-    if (typeof address === 'string' && this.isValidAddress(address)) {
+    if (this.isValidEthAddress(address) || this.isValidDNS(address)) {
       this.address = address
     }
-    if (typeof port === 'string' && this.isValidPort(port)) {
+    if (this.isValidPort(port)) {
       this.port = port
     }
     if (typeof autoStart !== 'undefined') {
       this.autoStart = true
     }
-    if (typeof width === 'string' && this.isValidWidth(width)) {
+    if (this.isValidWidth(width)) {
       this.width = width
     }
-    if (typeof height === 'string' && this.isValidHeight(height)) {
+    if (this.isValidHeight(height)) {
       this.height = height
     }
     if (this.autoStart) {
@@ -92,7 +92,14 @@ export default {
     this.destroyPlayer()
   },
   methods: {
-    isValidAddress (address) {
+    isString (src) {
+      const srcType = typeof src
+      return srcType !== 'undefined' && srcType === 'string'
+    },
+    isValidEthAddress (address) {
+      if (!this.isString(address)) {
+        return false
+      }
       if (address.length !== 42) {
         return false
       }
@@ -101,7 +108,24 @@ export default {
       }
       return true
     },
+    isValidDNS (dns) {
+      if (!this.isString(dns)) {
+        return false
+      }
+      if (!/^[0-9a-zA-Z-_]+$/.test(dns)) {
+        return false
+      }
+      const lastWord = dns.substr(dns.length - 1, 1)
+      // last word should not be - or _
+      if (lastWord === '-' || lastWord === '_') {
+        return false
+      }
+      return true
+    },
     isValidPort (port) {
+      if (!this.isString(port)) {
+        return false
+      }
       if (!/^[0-9]{1,5}$/.test(port)) {
         return false
       }
@@ -111,6 +135,9 @@ export default {
       return true
     },
     isValidWidth (width) {
+      if (!this.isString(width)) {
+        return false
+      }
       if (!/^[0-9]{1,4}$/.test(width)) {
         return false
       }
@@ -120,6 +147,9 @@ export default {
       return true
     },
     isValidHeight (height) {
+      if (!this.isString(height)) {
+        return false
+      }
       if (!/^[0-9]{1,4}$/.test(height)) {
         return false
       }
@@ -130,18 +160,11 @@ export default {
     },
     validateInput () {
       this.errors = []
-      if (this.address.length !== 42) {
+      if (!(this.isValidEthAddress(this.address) || this.isValidDNS(this.address))) {
         this.errors.push('Wrong diode address')
       }
-      if (!/^(0x|0X)[0-9a-fA-F]{40}$/.test(this.address)) {
-        this.errors.push('Wrong diode address')
-      }
-      if (!/^[0-9]{1,5}$/.test(this.port)) {
+      if (!this.isValidPort(this.port)) {
         this.errors.push('Wrong port')
-      } else {
-        if (parseInt(this.port) <= 0) {
-          this.errors.push('Wrong port')
-        }
       }
       let validated = this.errors.length <= 0
       return validated
