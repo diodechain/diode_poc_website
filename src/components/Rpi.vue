@@ -11,7 +11,7 @@
         </div>
       </div>
     </div>
-    <div style="text-align: left;padding: 25px;width:80%; margin: auto;"  v-if="!autoStart">
+    <div style="text-align: left; padding-left: 25px; padding-right: 25px; width: 80%; margin: auto;"  v-show="!autoStart && !connected">
       <div style="padding:15px">
         <label for="video-secure" style="background: #eee">
           Secure Mode:
@@ -48,6 +48,8 @@
           <input id="height" type="text" v-model="height" placeholder="height" v-bind:disabled="loading || connected">
         </label>
       </div>
+    </div>
+    <div style="text-align: left; padding-left: 25px; padding-right: 25px; width: 80%; margin: auto;"  v-show="!autoStart">
       <div style="padding:15px">
         <button v-on:click="startVideoStream" v-bind:disabled="loading || connected">Start</button>
         <button v-on:click="stopVideoStream" v-show="connected">Stop</button>
