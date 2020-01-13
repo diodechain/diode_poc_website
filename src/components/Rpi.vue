@@ -26,14 +26,26 @@
       </div>
       <div style="padding:15px">
         <label for="ethereum-address">
-          Ethereum Address:
-          <input id="ethereum-address" type="text" v-model="address" v-bind:disabled="loading || connected">
+          Ethereum Address / DNS:
+          <input id="ethereum-address" type="text" v-model="address" placeholder="ethereum address / DNS" v-bind:disabled="loading || connected">
         </label>
       </div>
       <div style="padding:15px">
         <label for="port">
           Port:
-          <input id="port" type="text" v-model="port" v-bind:disabled="loading || connected">
+          <input id="port" type="text" v-model="port" placeholder="port" v-bind:disabled="loading || connected">
+        </label>
+      </div>
+      <div style="padding:15px">
+        <label for="width">
+          Width:
+          <input id="width" type="text" v-model="width" placeholder="width" v-bind:disabled="loading || connected">
+        </label>
+      </div>
+      <div style="padding:15px">
+        <label for="height">
+          Height:
+          <input id="height" type="text" v-model="height" placeholder="height" v-bind:disabled="loading || connected">
         </label>
       </div>
       <div style="padding:15px">
@@ -134,12 +146,14 @@ export default {
       if (!this.isValidAddress(this.address)) {
         this.errors.push('Invalid diode address: "' + this.address + '"')
       }
-      if (!/^[0-9]{1,5}$/.test(this.port)) {
+      if (!this.isValidPort(this.port)) {
         this.errors.push('Wrong port')
-      } else {
-        if (parseInt(this.port) <= 0) {
-          this.errors.push('Wrong port')
-        }
+      }
+      if (!this.isValidWidth(this.width)) {
+        this.errors.push('Wrong width')
+      }
+      if (!this.isValidHeight(this.height)) {
+        this.errors.push('Wrong height')
       }
       let validated = this.errors.length <= 0
       return validated
