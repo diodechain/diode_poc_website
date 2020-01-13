@@ -1,7 +1,7 @@
 <template>
   <div class="rpi">
-    <div style="padding: 25px;width:80%; margin: auto;">
-      <div style="color:red" v-show="errors.length > 0">
+    <div style="padding: 25px;width:80%; margin: auto;" v-show="errors.length > 0">
+      <div style="color:red">
         <div style="">
           <h1>Bad input data</h1>
           <p v-bind:key="i" v-for="(err, i) in errors">{{ err }}</p>
