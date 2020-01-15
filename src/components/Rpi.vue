@@ -51,12 +51,13 @@ export default {
   data: function () {
     return {
       secureMode: true,
-      shareMode: false,
-      autoStart: false,
+      shareMode: true,
+      autoStart: true,
+      // autoStart: false,
       address: /([^/\.]+)/.exec(window.location.hostname)[1],
       port: '3030',
-      width: 400,
-      height: 300,
+      width: 320,
+      height: 180,
       loading: false,
       connected: false,
       wsavc: {},
@@ -164,7 +165,10 @@ export default {
       this.wsavc = wsavc
       this.wsavc.initCanvas(this.width, this.height)
       this.wsavc.pushRawVideo(twoFrames)
-      this.wsavc.connect(uri)
+      this.wsavc.connect(uri, () =>{
+          console.log("WSAvcPlayer: Connection closed")
+          this.connected = false
+      })
       this.loading = false
       this.connected = true
     },

@@ -5122,7 +5122,7 @@ var WSAvcPlayer = new Class({
     this.avc.decode(data);
   },
 
-  connect : function(url) {
+  connect : function(url, onclose) {
 
     // Websocket initialization
     if (this.ws != undefined) {
@@ -5241,6 +5241,7 @@ var WSAvcPlayer = new Class({
     this.ws.onclose = () => {
       running = false;
       log("WSAvcPlayer: Connection closed")
+      if (onclose) onclose()
     };
 
   },
