@@ -19,9 +19,9 @@
         </label>
       </div>
       <div style="padding:15px">
-        <label for="video-mode">
+        <label for="video-mode" style="background: #eee">
           Share Mode:
-          <input id="video-mode" type="checkbox" v-model="shareMode" v-bind:disabled="loading || connected">
+          <input id="video-mode" type="checkbox" v-model="shareMode" disabled>
         </label>
       </div>
       <div style="padding:15px">
@@ -66,8 +66,7 @@ export default {
     return {
       secureMode: true,
       shareMode: true,
-      autoStart: true,
-      // autoStart: false,
+      autoStart: false,
       address: /([^/\.]+)/.exec(window.location.hostname)[1],
       port: '3030',
       width: 320,
