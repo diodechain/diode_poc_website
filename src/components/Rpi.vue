@@ -12,14 +12,14 @@
       </div>
     </div>
     <div style="text-align: left; padding-left: 25px; padding-right: 25px; width: 80%; margin: auto;"  v-show="!autoStart && !connected">
-      <div style="padding:15px">
-        <label for="video-secure" style="background: #eee">
+      <div class="hidden" style="padding:15px">
+        <label for="video-secure">
           Secure Mode:
           <input id="video-secure" type="checkbox" v-model="secureMode" disabled>
         </label>
       </div>
-      <div style="padding:15px">
-        <label for="video-mode" style="background: #eee">
+      <div class="hidden" style="padding:15px">
+        <label for="video-mode">
           Share Mode:
           <input id="video-mode" type="checkbox" v-model="shareMode" disabled>
         </label>
@@ -36,16 +36,16 @@
           <input id="port" type="text" v-model="port" placeholder="port" v-bind:disabled="loading || connected">
         </label>
       </div>
-      <div style="padding:15px">
+      <div class="hidden" style="padding:15px">
         <label for="width">
           Width:
-          <input id="width" type="text" v-model="width" placeholder="width" v-bind:disabled="loading || connected">
+          <input id="width" type="text" v-model="width" placeholder="width" disabled>
         </label>
       </div>
-      <div style="padding:15px">
+      <div class="hidden" style="padding:15px">
         <label for="height">
           Height:
-          <input id="height" type="text" v-model="height" placeholder="height" v-bind:disabled="loading || connected">
+          <input id="height" type="text" v-model="height" placeholder="height" disabled>
         </label>
       </div>
     </div>
@@ -92,12 +92,12 @@ export default {
     if (typeof autoStart !== 'undefined') {
       this.autoStart = true
     }
-    if (typeof width === 'string' && this.isValidWidth(width)) {
-      this.width = width
-    }
-    if (typeof height === 'string' && this.isValidHeight(height)) {
-      this.height = height
-    }
+    // if (typeof width === 'string' && this.isValidWidth(width)) {
+    //   this.width = width
+    // }
+    // if (typeof height === 'string' && this.isValidHeight(height)) {
+    //   this.height = height
+    // }
     if (this.autoStart) {
       this.startVideoStream()
     }
@@ -172,6 +172,8 @@ export default {
       var wsavc = new WSAvcPlayer(canvas, 'webgl', true)
       var protocol = (this.secureMode) ? 'wss' : 'ws'
       var uri = (this.shareMode) ? `${protocol}://rs-${this.address}-${this.port}.diode.ws/` : `${protocol}://r-${this.address}-${this.port}.diode.ws/`
+      // TODO: found a way to support other resolution video
+      // it's for 320x180
       var twoFrames = [
         0, 0, 0, 1, 39, 66, 128, 40, 149, 160, 80, 103, 231, 128, 120, 145, 53,
         0, 0, 0, 1, 40, 206, 1, 15, 32
@@ -202,3 +204,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.hidden {
+  display: none;
+}
+</style>
