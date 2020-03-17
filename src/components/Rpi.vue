@@ -11,7 +11,7 @@
         </div>
       </div>
     </div>
-    <div style="text-align: left; padding-left: 25px; padding-right: 25px; width: 80%; margin: auto;"  v-show="!autoStart && !connected">
+    <!-- <div style="text-align: left; padding-left: 25px; padding-right: 25px; width: 80%; margin: auto;"  v-show="!autoStart && !connected">
       <div class="hidden" style="padding:15px">
         <label for="video-secure">
           Secure Mode:
@@ -48,14 +48,20 @@
           <input id="height" type="text" v-model="height" placeholder="height" disabled>
         </label>
       </div>
-    </div>
-    <div style="text-align: left; padding-left: 25px; padding-right: 25px; width: 80%; margin: auto;"  v-show="!autoStart">
+    </div> -->
+    <!-- <div style="text-align: left; padding-left: 25px; padding-right: 25px; width: 80%; margin: auto;"  v-show="!autoStart">
       <div style="padding:15px">
         <button v-on:click="startVideoStream" v-bind:disabled="loading || connected">Start</button>
         <button v-on:click="stopVideoStream" v-show="connected">Stop</button>
       </div>
+    </div> -->
+    <div class="player">
+      <canvas id="video" class="video"></canvas>
+      <div class="control-panel">
+        <button v-on:click="startVideoStream" v-bind:disabled="loading || connected" v-show="!connected"><i class="fas fa-play"></i></button>
+        <button v-on:click="stopVideoStream" v-show="connected"><i class="fas fa-stop"></i></button>
+      </div>
     </div>
-    <canvas id="video" v-show="connected"></canvas>
   </div>
 </template>
 
@@ -98,6 +104,9 @@ export default {
     // if (typeof height === 'string' && this.isValidHeight(height)) {
     //   this.height = height
     // }
+    this.shareMode = true
+    this.address = 'pi-taipei'
+    this.port = 3030
     if (this.autoStart) {
       this.startVideoStream()
     }
@@ -208,5 +217,32 @@ export default {
 <style scoped>
 .hidden {
   display: none;
+}
+
+.player {
+  width: 100%;
+  background: black;
+}
+
+.player > #video {
+  width: 100%;
+  object-fit: contain;
+  max-height: 90vh;
+}
+
+.player > .control-panel {
+  width: 100%;
+  object-fit: contain;
+  max-height: 10vh;
+  padding: 2.5vh 0;
+}
+
+.control-panel > button {
+  font-size: 3vh;
+  padding: 1vh;
+}
+
+.control-panel > button:hover {
+  background-color: #ccc;
 }
 </style>
