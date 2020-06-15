@@ -105,8 +105,6 @@ export default {
     //   this.height = height
     // }
     this.shareMode = true
-    this.address = 'pi-taipei'
-    this.port = 3030
     if (this.autoStart) {
       this.startVideoStream()
     }
