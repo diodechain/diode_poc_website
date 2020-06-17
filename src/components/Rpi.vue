@@ -55,7 +55,7 @@
         <button v-on:click="stopVideoStream" v-show="connected">Stop</button>
       </div>
     </div> -->
-    <div class="player">
+    <div class="player" v-show="errors.length == 0">
       <canvas id="video" class="video"></canvas>
       <div class="control-panel">
         <button v-on:click="startVideoStream" v-bind:disabled="loading || connected" v-show="!connected"><i class="fas fa-play"></i></button>
@@ -70,7 +70,7 @@ export default {
   name: 'Rpi',
   data: function () {
     return {
-      secureMode: true,
+      secureMode: window.location.protocol === 'https:',
       shareMode: true,
       autoStart: false,
       address: /([^/\.]+)/.exec(window.location.hostname)[1],
@@ -114,6 +114,9 @@ export default {
   },
   methods: {
     isValidAddress (address) {
+      if (address === 'localhost' || address == '127.0.0.1') {
+        return false
+      }
       if (/^[a-zA-Z0-9][a-zA-Z0-9-]{5,30}[a-zA-Z]$/.test(address)) {
         return true
       }
@@ -168,6 +171,10 @@ export default {
     },
     startVideoStream (e) {
       if (!this.validateInput()) {
+        this.$swal({
+          icon: 'warning',
+          title: 'Some parameters are not valid, please contact us.',
+        });
         return
       }
       if (this.connected) {
@@ -192,6 +199,10 @@ export default {
       this.wsavc.connect(uri, () =>{
           console.log("WSAvcPlayer: Connection closed")
           this.connected = false
+          this.$swal({
+            icon: 'info',
+            title: 'Video stream closed.',
+          });
       })
       this.loading = false
       this.connected = true
