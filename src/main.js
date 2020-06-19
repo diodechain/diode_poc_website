@@ -3,15 +3,15 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import VueSweetalert2 from 'vue-sweetalert2';
+import VueSweetalert2 from 'vue-sweetalert2'
 
-import 'sweetalert2/dist/sweetalert2.min.css';
+import 'sweetalert2/dist/sweetalert2.min.css'
 
 const sweetAlertOptions = {
   confirmButtonColor: '#F15C2E'
-};
+}
 
-Vue.use(VueSweetalert2, sweetAlertOptions);
+Vue.use(VueSweetalert2, sweetAlertOptions)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

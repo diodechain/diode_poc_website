@@ -73,7 +73,7 @@ export default {
       secureMode: window.location.protocol === 'https:',
       shareMode: true,
       autoStart: false,
-      address: /([^/\.]+)/.exec(window.location.hostname)[1],
+      address: /([^/.]+)/.exec(window.location.hostname)[1],
       port: '3030',
       width: 320,
       height: 180,
@@ -98,12 +98,12 @@ export default {
     if (typeof autoStart !== 'undefined') {
       this.autoStart = true
     }
-    // if (typeof width === 'string' && this.isValidWidth(width)) {
-    //   this.width = width
-    // }
-    // if (typeof height === 'string' && this.isValidHeight(height)) {
-    //   this.height = height
-    // }
+    if (typeof width === 'string' && this.isValidWidth(width)) {
+      this.unused_width = width
+    }
+    if (typeof height === 'string' && this.isValidHeight(height)) {
+      this.unused_height = height
+    }
     this.shareMode = true
     if (this.autoStart) {
       this.startVideoStream()
@@ -114,7 +114,7 @@ export default {
   },
   methods: {
     isValidAddress (address) {
-      if (address === 'localhost' || address == '127.0.0.1') {
+      if (address === 'localhost' || address === '127.0.0.1') {
         return false
       }
       if (/^[a-zA-Z0-9][a-zA-Z0-9-]{5,30}[a-zA-Z]$/.test(address)) {
@@ -173,8 +173,8 @@ export default {
       if (!this.validateInput()) {
         this.$swal({
           icon: 'warning',
-          title: 'Some parameters are not valid, please contact us.',
-        });
+          title: 'Some parameters are not valid, please contact us.'
+        })
         return
       }
       if (this.connected) {
@@ -196,13 +196,13 @@ export default {
       this.wsavc = wsavc
       this.wsavc.initCanvas(this.width, this.height)
       this.wsavc.pushRawVideo(twoFrames)
-      this.wsavc.connect(uri, () =>{
-          console.log("WSAvcPlayer: Connection closed")
-          this.connected = false
-          this.$swal({
-            icon: 'info',
-            title: 'Video stream closed.',
-          });
+      this.wsavc.connect(uri, () => {
+        console.log('WSAvcPlayer: Connection closed')
+        this.connected = false
+        this.$swal({
+          icon: 'info',
+          title: 'Video stream closed.'
+        })
       })
       this.loading = false
       this.connected = true
