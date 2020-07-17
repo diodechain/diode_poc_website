@@ -79,7 +79,7 @@ export default {
       height: 180,
       loading: false,
       connected: false,
-      wsavc: {},
+      wsavc: null,
       errors: []
     }
   },
@@ -183,7 +183,7 @@ export default {
       this.loading = true
       var WSAvcPlayer = window.WSAvcPlayer
       var canvas = document.getElementById('video')
-      var wsavc = new WSAvcPlayer(canvas, 'webgl', true)
+      var wsavc = (this.wsavc !== null) ? this.wsavc : new WSAvcPlayer(canvas, 'webgl', true, 12, true)
       var protocol = (this.secureMode) ? 'wss' : 'ws'
       var uri = (this.shareMode) ? `${protocol}://rs-${this.address}-${this.port}.diode.ws/` : `${protocol}://r-${this.address}-${this.port}.diode.ws/`
       // TODO: found a way to support other resolution video
@@ -194,29 +194,31 @@ export default {
       ]
 
       this.wsavc = wsavc
-      this.wsavc.initCanvas(this.width, this.height)
-      this.wsavc.pushRawVideo(twoFrames)
-      this.wsavc.connect(uri, () => {
-        console.log('WSAvcPlayer: Connection closed')
+      // this.wsavc.once('canvasReady', () => {})
+      this.wsavc.once('close', () => {
         this.connected = false
         this.$swal({
           icon: 'info',
           title: 'Video stream closed.'
         })
       })
-      this.loading = false
-      this.connected = true
+      this.wsavc.once('connected', () => {
+        this.loading = false
+        this.connected = true
+      })
+      this.wsavc.initCanvas(this.width, this.height)
+      this.wsavc.pushRawVideo(twoFrames)
+      this.wsavc.connect(uri)
     },
     stopVideoStream (e) {
-      this.destroyPlayer()
+      if (this.connected) {
+        this.destroyPlayer()
+      }
     },
     destroyPlayer () {
-      if (this.wsavc.removeAllListeners !== undefined) {
-        this.wsavc.removeAllListeners()
+      if (this.wsavc) {
         this.wsavc.disconnect()
-        this.wsavc = null
-        this.connected = false
-        window.player = null
+        // this.wsavc.removeAllListeners()
       }
     }
   }
